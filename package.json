@@ -1,21 +1,78 @@
 {
-  "name": "nyt-library-customization-example",
-  "version": "1.0.0",
-  "description": "Sample customizations for your Library instance",
-  "main": "index.js",
-  "scripts": {},
+  "name": "library",
+  "version": "1.0.2",
+  "description": "A collaborative newsroom documentation site, powered by Google Docs.",
+  "main": "server/index.js",
+  "dependencies": {
+    "@google-cloud/datastore": "^1.4.2",
+    "assert": "^1.4.1",
+    "cache-manager": "^2.9.0",
+    "cache-manager-ioredis": "^1.0.1",
+    "chai": "^4.2.0",
+    "cheerio": "^1.0.0-rc.2",
+    "deepmerge": "^2.2.1",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "express-promise-router": "^3.0.3",
+    "express-session": "^1.15.6",
+    "express-sslify": "^1.2.0",
+    "google-auth-library": "^3.1.1",
+    "googleapis": "^37.2.0",
+    "helmet-csp": "^2.7.1",
+    "ioredis": "^4.9.0",
+    "js-yaml": "^3.12.2",
+    "lodash": "^4.17.11",
+    "md5": "^2.2.1",
+    "moment": "^2.24.0",
+    "node-sass": "^4.11.0",
+    "passport": "^0.4.0",
+    "passport-google-oauth20": "^1.0.0",
+    "pretty": "^2.0.0",
+    "promise-inflight": "^1.0.1",
+    "slugify": "^1.3.4",
+    "unescape": "^1.0.1",
+    "winston": "^2.4.4",
+    "xlsx": "^0.11.19"
+  },
+  "devDependencies": {
+    "concurrently": "^3.6.1",
+    "dotenv": "^4.0.0",
+    "eslint": "^3.19.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-promise": "^3.8.0",
+    "eslint-plugin-standard": "^3.1.0",
+    "mocha": "^5.2.0",
+    "nock": "^9.6.1",
+    "nodemon": "^1.18.10",
+    "nyc": "^13.3.0",
+    "sinon": "^6.3.5",
+    "supertest": "^3.4.2",
+    "valid-url": "^1.0.9"
+  },
+  "scripts": {
+    "start": "node server/index.js",
+    "build": "node-sass --include-path custom/styles --include-path styles/partials --source-map public/css/style.css.map --source-map-contents styles/style.scss public/css/style.css",
+    "debug": "node -r dotenv/config --inspect --debug-brk server/index.js",
+    "watch": "concurrently \"nodemon --inspect=0.0.0.0 -r dotenv/config -e js,ejs server/index.js\" \"nodemon -e scss --watch styles --watch custom/styles -x npm run build\"",
+    "test": "NODE_ENV=test mocha test/**/*.test.js -r ./test/utils/bootstrap.js --recursive --exit",
+    "test:cover": "NODE_ENV=test nyc --include=server/** --reporter=html --reporter=text mocha test/**/*.test.js -r ./test/utils/bootstrap.js --recursive --exit",
+    "lint": "eslint ./server",
+    "gcp-build": "./bin/install_customizations && npm run build && ./bin/update_gae_pkg"
+  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nytimes/library-customization-example.git"
+    "url": "git+https://github.com/nytimes/library.git"
   },
   "author": "The New York Times",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/nytimes/library-customization-example/issues"
+    "url": "https://github.com/nytimes/library/issues"
   },
-  "homepage": "https://github.com/nytimes/library-customization-example#readme",
-  "dependencies": {
-    "cache-manager-ioredis": "^1.0.1",
-    "express-sslify": "^1.2.0"
-  }
+  "engines": {
+    "node": "10.x",
+    "npm": "6.5.x"
+  },
+  "homepage": "https://github.com/nytimes/library#readme"
 }
