@@ -97,8 +97,8 @@ Inside your clone of the cusomization repo, follow the provided push commands. N
 ```
 $(aws ecr get-login --no-include-email --region us-east-1)
 docker build -t knightlab/custom-library .
-docker tag knightlab/custom-library:latest <some-id>.dkr.ecr.<some-region>.amazonaws.com/knightlab/custom-library:latest
-docker push <some-id>.dkr.ecr.<some-region>.amazonaws.com/knightlab/custom-library:latest
+docker tag knightlab/custom-library:latest some-id.dkr.ecr.some-region.amazonaws.com/knightlab/custom-library:latest
+docker push some-id.dkr.ecr.some-region.amazonaws.com/knightlab/custom-library:latest
 ```
 
 Be sure to use the push commands specific to your ECR repository. Note that if you have multiple accounts configured in your AWS credentials, you can pass a --profile parameter to the get-login command.
@@ -109,7 +109,7 @@ This process will build the Docker container, tag it as latest, and push it up t
 
 Tip: Before you leave the ECR panel, copy the repository image path into your clipboard. You will need it below. It looks somthing like this:
 
-<some-id>.dkr.ecr.<some-region>.amazonaws.com/knightlab/custom-library
+some-id.dkr.ecr.some-region.amazonaws.com/knightlab/custom-library
 
 From the ECS panel, select Task Definitions > Create new Task Definition.
 
