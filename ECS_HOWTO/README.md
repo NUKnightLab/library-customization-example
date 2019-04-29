@@ -1,8 +1,24 @@
+# Running a custom Library instance in AWS ECS Fargate
+
+To run Library in ECS:
+
+ * Fork the GitHub repo
+ * Create an ECR repository
+ * Build and push the repository
+ * Create the task definition
+ * Run the task
+
+See below for more detail.
+
 ## Fork the Github repo
+
+The Library customization example repository demonstrates how to create a customized version of Library that is build from the NYT Library Docker image. The primary difference between that example and what we are doing here is that we will not use Docker Compose.
+
+The first step is simply to clone the customization repository.
 
 https://github.com/nytimes/library-customization-example
 
-fork_repo.png
+![Fork the GitHub Repo](fork_repo.png)
 
 
 ## Dockerfile
@@ -57,13 +73,24 @@ Additional needed dependencies should also be defined here.
 
 ## Create the ECR repository
 
-select_ecr.png
-create_repository.png
-name_repository.png
+ECR is the container repository service counterpart to AWS ECS. It is possible to use a different repository service, but using ECR is the easiest way to get started in ECS.
 
-Select the newly created repository from the ECR repositories list and select `View push commands`
+Note that there is a distinction here between the container repository and the code repository. Even though your code is revision controlled in GitHub, you still need to host the built Docker container in a container repository. That is the role of ECR -- ECS will pull the build container from ECR when it comes time to execute the task.
 
-view_push_commands.png
+Select the ECR service in the AWS console.
+
+![Select ECR Service](select_ecr.png)
+
+Select `Create repository`.
+
+![Create the Repository](create_repository.png)
+
+Name the repostory. Optionally provide a namespace as we have done here with `namespace/repository-name`.
+
+![Name the Repository](name_repository.png)
+
+Now you will need to build and push up an image of the Docker container into this repository. Select the newly created repository from the ECR repositories list and select `View push commands`
+![View push commands](view_push_commands.png)
 
 Inside your clone of the cusomization repo, follow the provided push commands. Note, you will need to have the AWS CLI intalled with credentials configured. ECR uses a login process from your credentials configurations. The push commands will look something like this:
 
@@ -86,11 +113,15 @@ Tip: Before you leave the ECR panel, copy the repository image path into your cl
 
 From the ECS panel, select Task Definitions > Create new Task Definition.
 
-create_task_defintion.png
+![Create Task Definition](create_task_defintion.png)
 
 Select the Fargate launch type, and Next step.
 
-select_fargate.png
+![Select Fargate](select_fargate.png)
+
+You will now define the task as well as the properties of the container. Note that resources specified below (Memory, CPU, etc) are somewhat arbitrary. We have started small and can easily rebuild our task definition and spin up a new task.
+
+Note the use of port 80 here. As far as I can tell, there is not a way to map an arbitrary port in the container to a public port. Rather, with Fargate, you are simply defining which ports to expose and what the protocol is on that port. As a result, we have also defined `PORT=80` in the configuration environment variables for Library. Note that we use an https proxy, which is why port 80 works for us. You may need to expose port 443, but setting up the relevant SSL certs is currently not covered here.
 
 Fill out:
 Task Defintion Name
@@ -101,9 +132,9 @@ Task CPU (vCPU) 0.25 vCPU
 
 Select Add container
 
-add_container.png
+![Add container](add_container.png)
 
-Fill out
+Fill out:
 
 Container name
 Image: You will need to go back to your ECR panel and copy this (Note to AWS team: it would be super helpful if you gave us a selector here)
@@ -114,7 +145,7 @@ Port mapping: 80 (tcp)
 
 Under the Advanced Container Configuration, find the Environment variables section. You will need to add the environment variables that would normally go into your .env file.
 
-environment_variables.png
+![Environment variables](environment_variables.png)
 
 We have the following variables defined:
 
@@ -130,9 +161,9 @@ NODE_ENV
 PORT
 SESSION_SECRET
 
-Note PORT is set to 80. GOOGLE_APPLICATION_CREDENTIALS is parse_json, and GOOGLE_APPLICATION_JSON is the whole JSON string.
+Note PORT is set to 80. GOOGLE_APPLICATION_CREDENTIALS is parse_json, and GOOGLE_APPLICATION_JSON is the whole JSON string, -- we are not using an external auth.json file here.
 
-Select Add
+Select `Add`
 
 Once you have configured the Task defintion and it's container configs, select Create to create the task definition. This should successfully launch the task definition and its cloud watch log group.
 
@@ -140,7 +171,7 @@ Once you have configured the Task defintion and it's container configs, select C
 
 From the console of the new task definition, select Actions > Run Task
 
-run_task.png
+![Run task](run_task.png)
 
 Select:
 Launch type: FARGATE
