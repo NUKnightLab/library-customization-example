@@ -124,11 +124,12 @@ You will now define the task as well as the properties of the container. Note th
 Note the use of port 80 here. As far as I can tell, there is not a way to map an arbitrary port in the container to a public port. Rather, with Fargate, you are simply defining which ports to expose and what the protocol is on that port. As a result, we have also defined `PORT=80` in the configuration environment variables for Library. Note that we use an https proxy, which is why port 80 works for us. You may need to expose port 443, but setting up the relevant SSL certs is currently not covered here.
 
 Fill out:
-Task Defintion Name
-Task Role (ecsTaskExecutionRole -- you may need to create this in IAM)
-Task Execution Role (ecsTaskExecutionRole)
-Task Memory 0.5GB
-Task CPU (vCPU) 0.25 vCPU
+
+ * Task Defintion Name
+ * Task Role (ecsTaskExecutionRole -- you may need to create this in IAM)
+ * Task Execution Role (ecsTaskExecutionRole)
+ * Task Memory 0.5GB
+ * Task CPU (vCPU) 0.25 vCPU
 
 Select Add container
 
@@ -136,12 +137,12 @@ Select Add container
 
 Fill out:
 
-Container name
-Image: You will need to go back to your ECR panel and copy this (Note to AWS team: it would be super helpful if you gave us a selector here)
-Private repository authentication: Leave this unselected - we are not using this.
-Memory soft limit: 300
-Memory hard limit: 500
-Port mapping: 80 (tcp)
+ * Container name
+ * Image: You will need to go back to your ECR panel and copy this (Note to AWS team: it would be super helpful if you gave us a selector here)
+ * Private repository authentication: Leave this unselected - we are not using this.
+ * Memory soft limit: 300
+ * Memory hard limit: 500
+ * Port mapping: 80 (tcp)
 
 Under the Advanced Container Configuration, find the Environment variables section. You will need to add the environment variables that would normally go into your .env file.
 
@@ -149,17 +150,17 @@ Under the Advanced Container Configuration, find the Environment variables secti
 
 We have the following variables defined:
 
-APPROVED_DOMAINS
-DRIVE_ID
-DRIVE_TYPE
-GCP_PROJECT_ID
-GOOGLE_APPLICATION_CREDENTIALS
-GOOGLE_APPLICATION_JSON
-GOOGLE_CLIENT_ID
-GOOGLE_CLIENT_SECRET
-NODE_ENV
-PORT
-SESSION_SECRET
+ * APPROVED_DOMAINS
+ * DRIVE_ID
+ * DRIVE_TYPE
+ * GCP_PROJECT_ID
+ * GOOGLE_APPLICATION_CREDENTIALS
+ * GOOGLE_APPLICATION_JSON
+ * GOOGLE_CLIENT_ID
+ * GOOGLE_CLIENT_SECRET
+ * NODE_ENV
+ * PORT
+ * SESSION_SECRET
 
 Note PORT is set to 80. GOOGLE_APPLICATION_CREDENTIALS is parse_json, and GOOGLE_APPLICATION_JSON is the whole JSON string, -- we are not using an external auth.json file here.
 
@@ -174,14 +175,15 @@ From the console of the new task definition, select Actions > Run Task
 ![Run task](run_task.png)
 
 Select:
-Launch type: FARGATE
-Platform version: Latest
-Cluster: default
-Number of tasks: 1
-Cluster VPC: EC2ContainerService-default
-Subnets: select available subnet(s)
-Security group: use the automatically created security group
-Auto-assign public IP: Enabled
+
+ * Launch type: FARGATE
+ * Platform version: Latest
+ * Cluster: default
+ * Number of tasks: 1
+ * Cluster VPC: EC2ContainerService-default
+ * Subnets: select available subnet(s)
+ * Security group: use the automatically created security group
+ * Auto-assign public IP: Enabled
 
 Select Run Task
 
