@@ -1,21 +1,21 @@
 branding:
-  name: About Library 
-  org: The New York Times
-  orgDomain: nytimes.com
-  prettyName: About Library
+  name: Knight Lab
+  org: Knight Lab Library
+  orgDomain: knightlab.northwestern.edu
+  prettyName: Knight Lab
   favicon: /assets/images/library.ico
 
 landing:
-  tagline: A simple documentation site, built from content in Google Docs.
+  tagline: Library is a collaborative documentation tool built by the New York Times Interactive Team and open sourced with the help of the Knight Lab.
   viewAll: View All Docs
-  quickLink: <a href="/get-started">Get started</a>.
+  quickLink: <a href="/project-summaries/library">Learn more about the project</a> and <a href="/categories">explore Knight Lab documents</a>.
 
 footer:
-  helpText: For help contributing or to report a problem, consult <a href="https://github.com/nytimes/library">the Github Page</a>.
-  defaultEmail: test.user@nytimes.com
+  helpText: To learn more about contributing to Library or to report a problem, consult <a href="https://github.com/nytimes/library">the project's Github Page</a>. To report a problem on this site, submit a <a href="https://knightlab.zendesk.com/hc/en-us/requests/new">Knight Lab tech support request</a>.
+  defaultEmail: knightlab-community+owners@googlegroups.com
 
 search:
-  placeholder: What do you want to know about Library?
+  placeholder: Search Knight Lab docs
   results:
     none:
       suggestion: To request a new page, submit <a href="https://github.com/nytimes/library">a PR on Github</a>.
